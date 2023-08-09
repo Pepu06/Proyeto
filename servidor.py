@@ -36,7 +36,7 @@ def receive_data():
             nueva_y = y_actual + cambio_y
 
             # Mueve el mouse a la nueva posición
-            pyautogui.moveTo(nueva_x, nueva_y)
+            pyautogui.moveTo(nueva_x, nueva_y, 0.2)
             
             return "Mouse movido correctamente"
         except ValueError:
