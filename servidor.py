@@ -1,11 +1,11 @@
 from flask import Flask, request
-import pyautogui
+import pyautogui as pa
 
 app = Flask(__name__)
 
 # Disable PyAutoGUI fail-safe
-pyautogui.FAILSAFE = False
-pyautogui.moveTo(596, 302)
+pa.FAILSAFE = False
+pa.moveTo(683, 384)
 
 @app.route('/', methods=['POST', 'GET'])
 def receive_data():
@@ -18,25 +18,25 @@ def receive_data():
             print(f"Aceleración X: {acel_x}, Aceleración Y: {acel_y}")
 
             # Mapping range for accelerometer data in X and Y axes
-            rango_acelerometro_x = 32767  # Adjust as per X-axis accelerometer range
-            rango_acelerometro_y = 32767  # Adjust as per Y-axis accelerometer range
+            rango_ac_x = 32767  # Adjust as per X-axis accelerometer range
+            rango_ac_y = 32767  # Adjust as per Y-axis accelerometer range
 
             # Mapping range for mouse movement in X and Y axes
-            rango_mouse_x = 1920  # Adjust as per screen's width
-            rango_mouse_y = 1080  # Adjust as per screen's height
+            rango_mouse_x = 1366  # Adjust as per screen's width
+            rango_mouse_y = 768  # Adjust as per screen's height
 
-            cambio_x = (acel_x / rango_acelerometro_x) * rango_mouse_x
-            cambio_y = (acel_y / rango_acelerometro_y) * rango_mouse_y
+            cambio_x = (acel_x / rango_ac_x) * rango_mouse_x
+            cambio_y = (acel_y / rango_ac_y) * rango_mouse_y
 
             # Obtiene la posición actual del mouse
-            x_actual, y_actual = pyautogui.position()
+            x_actual, y_actual = pa.position()
 
             # Calcula la nueva posición del mouse
             nueva_x = x_actual + cambio_x
             nueva_y = y_actual + cambio_y
 
             # Mueve el mouse a la nueva posición
-            pyautogui.moveTo(nueva_x, nueva_y, 0.2)
+            pa.moveTo(nueva_x, nueva_y, 0.2)
             
             return "Mouse movido correctamente"
         except ValueError:
