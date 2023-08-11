@@ -21,9 +21,8 @@ def receive_data():
             rango_ac_x = 32767  # Adjust as per X-axis accelerometer range
             rango_ac_y = 32767  # Adjust as per Y-axis accelerometer range
 
-            # Mapping range for mouse movement in X and Y axes
-            rango_mouse_x = 1366  # Adjust as per screen's width
-            rango_mouse_y = 768  # Adjust as per screen's height
+            #Toma el rango de la pantalla
+            rango_mouse_x, rango_mouse_y = pa.size()
 
             cambio_x = (acel_x / rango_ac_x) * rango_mouse_x
             cambio_y = (acel_y / rango_ac_y) * rango_mouse_y

@@ -1,3 +1,5 @@
 import pyautogui
 
-pyautogui.moveTo(1000, 200, 0.2)
+rango_mouse_x, rango_mouse_y = pyautogui.size()
+
+print(rango_mouse_x, rango_mouse_y)
