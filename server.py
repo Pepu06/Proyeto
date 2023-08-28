@@ -1,6 +1,6 @@
 from flask import Flask, request
 import pyautogui as pa
-import json  # Import the json module
+import json
 
 app = Flask(__name__)
 
@@ -8,11 +8,16 @@ app = Flask(__name__)
 pa.FAILSAFE = False
 pa.moveTo(683, 384)
 
-@app.route('/', methods=['POST', 'GET'])
+@app.route('/', methods=['POST'])
 def receive_data():
     if request.method == 'POST':
         try:
-            data = json.loads(request.data)  # Load JSON data from the request
+            data = request.get_json()
+            print(data)
+            text = json.dumps(data, separators=",")
+            print(text)  # Load JSON data from the request
+            print(type(data[1]))
+            
             acel_x = float(data.get('acel_x', 0))
             acel_y = float(data.get('acel_y', 0))
             print(f"Aceleración X: {acel_x}, Aceleración Y: {acel_y}")
@@ -21,25 +26,27 @@ def receive_data():
             rango_ac_x = 32767  # Adjust as per X-axis accelerometer range
             rango_ac_y = 32767  # Adjust as per Y-axis accelerometer range
 
-            # Toma el rango de la pantalla
+            # Get the screen size
             rango_mouse_x, rango_mouse_y = pa.size()
 
             cambio_x = (acel_x / rango_ac_x) * rango_mouse_x
             cambio_y = (acel_y / rango_ac_y) * rango_mouse_y
 
-            # Obtiene la posición actual del mouse
+            # Get the current mouse position
             x_actual, y_actual = pa.position()
 
-            # Calcula la nueva posición del mouse
+            # Calculate the new mouse position
             nueva_x = x_actual + cambio_x
             nueva_y = y_actual + cambio_y
 
-            # Mueve el mouse a la nueva posición
-            pa.moveTo(nueva_x, nueva_y, 0.2)
+            # Move the mouse to the new position
+            pa.moveTo(nueva_x, nueva_y, duration=0.2)
 
             return "Mouse movido correctamente"
-        except (ValueError, TypeError):
-            return "Datos incorrectos: deben ser números"
+        except (ValueError, TypeError) as e:
+            return f"Datos incorrectos: {e}"
+        except Exception as e:
+            return f"Error interno: {e}"
     else:
         return "No se recibieron datos o los datos son incorrectos"
 
