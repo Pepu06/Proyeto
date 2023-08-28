@@ -13,9 +13,7 @@ def receive_data():
     if request.method == 'POST':
         try:
             data = request.get_json()
-            print(data)
-            text = json.dumps(data, separators=",")
-            print(text)  # Load JSON data from the request
+            print(data)  # Load JSON data from the request
             print(type(data[1]))
             
             acel_x = float(data.get('acel_x', 0))

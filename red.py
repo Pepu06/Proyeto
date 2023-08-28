@@ -59,12 +59,6 @@ history = model.fit(x_train, y_train, epochs=50, batch_size=16, validation_split
 loss, accuracy = model.evaluate(x_test, y_test)
 print("Porcentaje de precisión en los datos de prueba:", accuracy * 100, "%")
 
-# Visualizar el historial de pérdida
-# plt.xlabel("# Época")
-# plt.ylabel("Magnitud de pérdida")
-# plt.plot(history.history["loss"])
-# plt.show()
-
 # Guardar el modelo entrenado
 model.save('gesture_recognition_model.h5')
 
