@@ -16,9 +16,12 @@ def receive_data():
             print(data)  # Load JSON data from the request
             print(type(data[1]))
             
-            acel_x = float(data.get('acel_x', 0))
-            acel_y = float(data.get('acel_y', 0))
-            print(f"Aceleración X: {acel_x}, Aceleración Y: {acel_y}")
+            acel_x = data[0]
+            acel_y = data[1]
+            acel_z = data[2]
+            gyro_x = data[3]
+            gyro_y = data[4]
+            gyro_z = data[5]
 
             # Mapping range for accelerometer data in X and Y axes
             rango_ac_x = 32767  # Adjust as per X-axis accelerometer range
