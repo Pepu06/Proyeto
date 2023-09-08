@@ -1,6 +1,7 @@
 import serial
 import numpy as np
 from tensorflow.keras.models import load_model
+import pyautogui as pa
 import joblib
 import time
 
@@ -39,6 +40,9 @@ while True:
         
         # Imprimir la predicción
         print(f"Movimiento detectado: {predicted_labels[0]}")
+
+        if predicted_labels == "R":
+            pa.hotkey('alt', 'tab')
     
     except KeyboardInterrupt:
         # Detener el bucle con Ctrl+C

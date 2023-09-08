@@ -1,26 +1,24 @@
-from flask import Flask, request
+import serial
 import pyautogui as pa
-
-app = Flask(__name__)
 
 # Disable PyAutoGUI fail-safe
 pa.FAILSAFE = False
 pa.moveTo(683, 384)
 
-@app.route('/', methods=['POST'])
-def receive_data():
-    if request.method == 'POST':
-        try:
-            data = request()
-            print(data)  # Load JSON data from the request
-            print(type(data[1]))
-            
-            acel_x = data[0]
-            acel_y = data[1]
-            acel_z = data[2]
-            gyro_x = data[3]
-            gyro_y = data[4]
-            gyro_z = data[5]
+# Define the serial port configuration
+ser = serial.Serial('COM3', 115200)  # Replace 'COMx' with your Arduino's serial port
+
+while True:
+    try:
+        # Read data from the Arduino over the serial port
+        data = ser.readline().decode().strip().split(',')
+        print(data)  # Print the received data
+
+        # Parse the data (assuming it's comma-separated)
+        if len(data) > 2:
+            acel_x, acel_y, acel_z, gyro_x, gyro_y, gyro_z = map(int, data)
+
+            print(acel_x)
 
             # Mapping range for accelerometer data in X and Y axes
             rango_ac_x = 32767  # Adjust as per X-axis accelerometer range
@@ -42,13 +40,7 @@ def receive_data():
             # Move the mouse to the new position
             pa.moveTo(nueva_x, nueva_y, duration=0.2)
 
-            return "Mouse movido correctamente"
-        except (ValueError, TypeError) as e:
-            return f"Datos incorrectos: {e}"
-        except Exception as e:
-            return f"Error interno: {e}"
-    else:
-        return "No se recibieron datos o los datos son incorrectos"
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080)
+    except (ValueError, TypeError) as e:
+        print(f"Data error: {e}")
+    except Exception as e:
+        print(f"Error: {e}")
