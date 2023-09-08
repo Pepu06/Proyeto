@@ -35,14 +35,26 @@ while True:
         # Realizar la predicción
         predictions = model.predict(x_padded)
         
-        # Decodificar las predicciones usando el label encoder
-        predicted_labels = label_encoder.inverse_transform(np.argmax(predictions, axis=1))
+        # Obtener la probabilidad máxima de predicción
+        max_probability = np.max(predictions)
+        predicted_label = label_encoder.inverse_transform(np.argmax(predictions, axis=1))[0]
         
-        # Imprimir la predicción
-        print(f"Movimiento detectado: {predicted_labels[0]}")
+        if max_probability >= 0.8:
+            # Imprimir la predicción
+            print(f"Movimiento detectado: {predicted_label}")
+            
+            if predicted_label == "R":
+                pa.hotkey('alt', 'tab')
+        else:
+            print("No gesture detected")
 
-        if predicted_labels == "R":
-            pa.hotkey('alt', 'tab')
+        # Add empty if statements for "U," "L," and "D"
+        if predicted_label == "U":
+            pass
+        elif predicted_label == "L":
+            pass
+        elif predicted_label == "D":
+            pass
     
     except KeyboardInterrupt:
         # Detener el bucle con Ctrl+C
