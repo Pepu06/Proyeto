@@ -10,7 +10,7 @@ model = load_model('gesture_recognition_model.h5')
 label_encoder = joblib.load('label_encoder.pkl')
 
 # Inicializar la conexión con el puerto serial del Arduino
-arduino_port = 'COM3'  # Cambiar al puerto correcto en tu sistema
+arduino_port = 'COM4'  # Cambiar al puerto correcto en tu sistema
 baud_rate = 115200
 ser = serial.Serial(arduino_port, baud_rate, timeout=1)
 
@@ -45,16 +45,14 @@ while True:
             
             if predicted_label == "R":
                 pa.hotkey('alt', 'tab')
+            if predicted_label == "D":
+                pa.press('volumeup')
+            
         else:
             print("No gesture detected")
 
-        # Add empty if statements for "U," "L," and "D"
-        if predicted_label == "U":
-            pass
-        elif predicted_label == "L":
-            pass
-        elif predicted_label == "D":
-            pass
+            
+            
     
     except KeyboardInterrupt:
         # Detener el bucle con Ctrl+C
