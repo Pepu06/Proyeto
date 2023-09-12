@@ -10,6 +10,7 @@ SENSITIVITY_SCALE = 1000000.0  # Adjust this value to control sensitivity
 # Disable PyAutoGUI fail-safe
 pa.FAILSAFE = False
 pa.moveTo(683, 384)
+spil = 0
 
 # Define the serial port configuration
 ser = serial.Serial(COM_PORT, BAUD_RATE)
@@ -47,15 +48,17 @@ while True:
                     screen_width, screen_height = pa.size()
 
         # Calculate mouse movement with adjusted logic
-                    mouse_x = (acel_x / ACCELEROMETER_RANGE) * screen_width
-                    mouse_y = (acel_y / ACCELEROMETER_RANGE) * screen_height
-
-        # Ensure the mouse_x and mouse_y values are within the screen boundaries
-                    mouse_x = max(0, min(mouse_x, screen_width))
-                    mouse_y = max(0, min(mouse_y, screen_height))
-
-        # Move the mouse to the new position
-                pa.moveTo(mouse_x, mouse_y)
+                    if spil == 0:
+                        old_x = acel_z
+                        old_z = acel_x
+                        spil += 1
+                    new_x = acel_x - old_x
+                    new_z = acel_z - old_z
+                    mouse_x = (new_x / ACCELEROMETER_RANGE) * screen_width
+                    mouse_y = (new_z / ACCELEROMETER_RANGE) * screen_height
+                    pa.move(mouse_x, -mouse_y, 0,1)
+                    old_x = new_x
+                    old_z = new_z
 
     except (ValueError, TypeError) as e:
         print(f"Data error: {e}")
