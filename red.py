@@ -4,10 +4,8 @@ from sklearn.preprocessing import LabelEncoder
 from keras.utils import to_categorical
 from keras.models import Sequential
 from keras.layers import Dense
-from sklearn.model_selection import train_test_split
 import joblib
-import matplotlib.pyplot as plt
-from keras.models import load_model
+from sklearn.model_selection import KFold
 
 # Cargar los datos desde el archivo CSV
 data = pd.read_csv('datos_arduino_completo.csv')
@@ -41,23 +39,35 @@ encoded_y = label_encoder.fit_transform(y)
 # Convertir las etiquetas a codificación one-hot
 one_hot_y = to_categorical(encoded_y)
 
-# Dividir los datos en conjuntos de entrenamiento y prueba
-x_train, x_test, y_train, y_test = train_test_split(x_padded, one_hot_y, test_size=0.2, random_state=42)
-
 # Definir la arquitectura de la red neuronal
 model = Sequential()
-model.add(Dense(64, input_dim=x_train.shape[1], activation='relu'))
+model.add(Dense(64, input_dim=x_padded.shape[1], activation='relu'))
 model.add(Dense(32, activation='relu'))
 model.add(Dense(len(label_encoder.classes_), activation='softmax'))  # Capa de salida con activación softmax
 
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
-# Entrenar el modelo
-history = model.fit(x_train, y_train, epochs=50, batch_size=16, validation_split=0.2)
+# Configuración de validación cruzada k-fold
+k_fold = KFold(n_splits=5, shuffle=True, random_state=42)
 
-# Evaluar el modelo en los datos de prueba
-loss, accuracy = model.evaluate(x_test, y_test)
-print("Porcentaje de precisión en los datos de prueba:", accuracy * 100, "%")
+# Lista para almacenar las puntuaciones de precisión en cada división
+scores = []
+
+# Realizar la validación cruzada k-fold
+for train_indices, test_indices in k_fold.split(x_padded):
+    x_train, x_test = x_padded[train_indices], x_padded[test_indices]
+    y_train, y_test = one_hot_y[train_indices], one_hot_y[test_indices]
+
+    # Entrenar el modelo en esta división
+    history = model.fit(x_train, y_train, epochs=50, batch_size=16, validation_split=0.2)
+
+    # Evaluar el modelo en los datos de prueba de esta división
+    _, accuracy = model.evaluate(x_test, y_test)
+    scores.append(accuracy)
+
+# Calcular y mostrar la precisión promedio
+mean_accuracy = np.mean(scores)
+print(f"Precisión promedio en {k_fold.n_splits}-fold cross-validation: {mean_accuracy * 100:.2f}%")
 
 # Guardar el modelo entrenado
 model.save('gesture_recognition_model.h5')
