@@ -12,8 +12,6 @@ label_encoder = joblib.load('label_encoder.pkl')
 
 @app.route('/', methods=['POST'])
 def receive_data():
-    print("Hace el gesto ahora")
-    time.sleep(100)
     try:
         data = request.json  # Obtener los datos JSON del cuerpo de la solicitud
         if data:
@@ -47,7 +45,8 @@ def receive_data():
                     pa.press('volumeup')
             else:
                 print("No gesture detected")
-            time.sleep(5000)
+            time.sleep(4000)
+            print()
             return "Data received successfully", 200
         else:
             return "Invalid JSON data", 400
