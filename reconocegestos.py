@@ -50,6 +50,7 @@ while True:
             
         else:
             print("No gesture detected")
+            
     except KeyboardInterrupt:
         # Detener el bucle con Ctrl+C
         break
