@@ -48,7 +48,7 @@ model.add(Dense(len(label_encoder.classes_), activation='softmax'))  # Capa de s
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 # Configuración de validación cruzada k-fold
-k_fold = KFold(n_splits=5, shuffle=True, random_state=42)
+k_fold = KFold(n_splits=10, shuffle=True, random_state=42)
 
 # Lista para almacenar las puntuaciones de precisión en cada división
 scores = []

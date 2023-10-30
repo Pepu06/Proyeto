@@ -2,12 +2,12 @@ import serial
 import csv
 
 # Configura el puerto serial
-arduino_port = 'COM4'  # Puerto COM5 en Windows
+arduino_port = 'COM3'  # Puerto COM5 en Windows
 baud_rate = 115200     # Asegúrate de que coincide con la velocidad en el Arduino
 ser = serial.Serial(arduino_port, baud_rate)
 
 # Abre un archivo CSV para escribir los datos
-csv_filename = 'datos_arduino.csv'
+csv_filename = 'datos_del_arduino.csv'
 csv_file = open(csv_filename, 'w', newline='')
 csv_writer = csv.writer(csv_file)
 

@@ -22,28 +22,29 @@ while True:
         data = [int(x) for x in data]
 
         # Asegurémonos de que data tenga exactamente 60 elementos
-        if len(data) == 60:
-            print("El array data debe tener 60 elementos.")
+        if len(data) != 60:
+            #print("El array data debe tener 60 elementos.")
+            pass
         else:
             # Inicializamos una lista vacía para almacenar los 10 subarrays
-            # subarrays = []
+            subarrays = []
 
             # # Dividimos data en 10 subarrays de 6 elementos cada uno
-            # for i in range(10):
-            #     start_idx = i * 6
-            #     end_idx = start_idx + 6
-            #     subarray = data[start_idx:end_idx]
-            #     subarrays.append(subarray)
+            for i in range(10):
+                start_idx = i * 6
+                end_idx = start_idx + 6
+                subarray = data[start_idx:end_idx]
+                subarrays.append(subarray)
 
             # Imprimimos los 10 subarrays
-            #for i, subarray in enumerate(subarrays):
-                #print(f"Subarray {i + 1}: {subarray}")
+            for i, subarray in enumerate(subarrays):
+                print(f"Subarray {i + 1}: {subarray}")
 
             # Check if the received data has the expected format
-            #for data in subarrays:
-            #     if len(data) == 6:
-            acel_x, acel_y, acel_z, gyro_x, gyro_y, gyro_z = data
-            print(data)
+            for data in subarrays:
+                if len(data) == 6:
+                    acel_x, acel_y, acel_z, gyro_x, gyro_y, gyro_z = data
+                    print(data)
         # Get the screen size
             screen_width, screen_height = pa.size()
 
@@ -57,7 +58,7 @@ while True:
             mouse_x = (new_x / ACCELEROMETER_RANGE) * screen_width
             mouse_y = (new_z / ACCELEROMETER_RANGE) * screen_height
             print(mouse_x, mouse_y)
-            pa.move(mouse_x, -mouse_y, 1)
+            pa.move(mouse_x, -mouse_y, 0.4)
             old_x = acel_y
             old_z = acel_z
 
