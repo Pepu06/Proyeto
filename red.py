@@ -4,8 +4,8 @@ from sklearn.preprocessing import LabelEncoder
 from keras.utils import to_categorical
 from keras.models import Sequential
 from keras.layers import Dense
-import joblib
 from sklearn.model_selection import KFold
+import joblib
 
 # Cargar los datos desde el archivo CSV
 data = pd.read_csv('datos.csv')
@@ -16,7 +16,7 @@ tipos = []
 
 for gesture, group_data in mov:
     try:
-        tipo = group_data["Type"].iloc[1]
+        tipo = group_data["Type"].iloc[0]  # Usar el primer elemento en lugar del segundo
         if tipo is not None:
             tipos.append(tipo)
     except Exception as e:
@@ -43,7 +43,7 @@ one_hot_y = to_categorical(encoded_y)
 model = Sequential()
 model.add(Dense(64, input_dim=x_padded.shape[1], activation='relu'))
 model.add(Dense(32, activation='relu'))
-model.add(Dense(len(label_encoder.classes_), activation='softmax'))  # Capa de salida con activación softmax
+model.add(Dense(len(label_encoder.classes_), activation='softmax'))
 
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
@@ -59,7 +59,7 @@ for train_indices, test_indices in k_fold.split(x_padded):
     y_train, y_test = one_hot_y[train_indices], one_hot_y[test_indices]
 
     # Entrenar el modelo en esta división
-    history = model.fit(x_train, y_train, epochs=50, batch_size=16, validation_split=0.2)
+    history = model.fit(x_train, y_train, epochs=20, batch_size=16, validation_split=0.2)
 
     # Evaluar el modelo en los datos de prueba de esta división
     _, accuracy = model.evaluate(x_test, y_test)
