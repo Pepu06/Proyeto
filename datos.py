@@ -7,12 +7,12 @@ baud_rate = 115200     # Asegúrate de que coincide con la velocidad en el Ardui
 ser = serial.Serial(arduino_port, baud_rate)
 
 # Abre un archivo CSV para escribir los datos
-csv_filename = 'datos_del_arduino.csv'
+csv_filename = 'datos.csv'
 csv_file = open(csv_filename, 'w', newline='')
 csv_writer = csv.writer(csv_file)
 
 # Escribe encabezados en el archivo CSV
-headers = ['Accel_X', 'Accel_Y', 'Accel_Z', 'Gyro_X', 'Gyro_Y', 'Gyro_Z', 'Time', 'Gesture', 'Type']
+headers = ['Gyro_X', 'Gyro_Y', 'Time', 'Gesture', 'Type']
 csv_writer.writerow(headers)
 
 try:
@@ -25,9 +25,9 @@ try:
         # Divide los datos en partes (separados por comas)
         data_parts = serial_data.split(',')
 
-        if len(data_parts) == 9:
-            accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z, time, gesture, gesture_type = data_parts
-            csv_writer.writerow([accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z, time, gesture, gesture_type])
+        if len(data_parts) == 5:
+            gyro_x, gyro_y, time, gesture, gesture_type = data_parts
+            csv_writer.writerow([gyro_x, gyro_y, time, gesture, gesture_type])
             csv_file.flush()  # Forzar escritura en el archivo
 
 except KeyboardInterrupt:

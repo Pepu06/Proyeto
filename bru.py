@@ -9,15 +9,13 @@ def receive_data():
     try:
         data = request.get_json(force=True)  # Indica que se espera un JSON
         print(data)
-        vx = (data[0] * 3)
-        vy = (data[1] * 5)
         
-        # Mueve el mouse en función de vx y vy
+        vx = float(data[0]) * 3
+        vy = float(data[1]) * 3
+
+        # Mover el mouse suavizado
         pyautogui.move(vx, vy)
-        
-        # Opcional: muestra los valores de vx y vy en la consola
-        print(f"vx: {vx}, vy: {vy}")
-        
+                
         return 'Data received successfully', 200
     except Exception as e:
         return f'Error: {str(e)}', 400

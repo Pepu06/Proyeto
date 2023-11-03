@@ -8,7 +8,7 @@ import joblib
 from sklearn.model_selection import KFold
 
 # Cargar los datos desde el archivo CSV
-data = pd.read_csv('datos_arduino_completo.csv')
+data = pd.read_csv('datos.csv')
 
 mov = data.groupby('Gesture')
 
