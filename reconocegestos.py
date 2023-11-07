@@ -9,53 +9,27 @@ import time
 model = load_model('gesture_recognition_model.h5')
 label_encoder = joblib.load('label_encoder.pkl')
 
-# Inicializar la conexión con el puerto serial del Arduino
-arduino_port = 'COM3'  # Cambiar al puerto correcto en tu sistema
-baud_rate = 115200
-ser = serial.Serial(arduino_port, baud_rate, timeout=1)
-
-# Leer datos del puerto serial y predecir gestos
-while True:
-    try:
-        input("Presiona Enter para realizar el gesto...")
-        print("Esperando 1 segundo para el gesto...")
-        time.sleep(0.5)  # Esperar 0.5 segundos
-        
-        print("Realizando el gesto...")
-
-        # Leer todas las líneas disponibles en el puerto serial y quedarse con la última
-        while ser.in_waiting:
-            line = ser.readline().decode('utf-8').strip()
-        
-        data = list(map(int, line.split(',')))
-        print(data)
-        # Preprocesar los datos de prueba
-        x_padded = np.array([data])
+data = [-63.23,-1.29,-86.77,-2.01,-92.58,-6.11,-108.85,-1.90,-78.53,21.37,-91.93,15.31,-25.58,30.11,-76.47,-0.45,-36.81,6.19,-42.65,-0.73]
+x_padded = np.array([data])
         
         # Realizar la predicción
-        predictions = model.predict(x_padded)
+predictions = model.predict(x_padded)
         
         # Obtener la probabilidad máxima de predicción
-        max_probability = np.max(predictions)
-        predicted_label = label_encoder.inverse_transform(np.argmax(predictions, axis=1))[0]
+max_probability = np.max(predictions)
+predicted_label = label_encoder.inverse_transform(np.argmax(predictions, axis=1))[0]
         
-        if max_probability >= 0.8:
+if max_probability >= 0.8:
             # Imprimir la predicción
-            print(f"Movimiento detectado: {predicted_label}")
+    print(f"Movimiento detectado: {predicted_label}")
             
-            if predicted_label == "R":
-                pa.hotkey('alt', 'tab')
-            if predicted_label == "D":
-                pa.press('volumeup')
-            
-        else:
-            print("No gesture detected")
-            
-    except KeyboardInterrupt:
-        # Detener el bucle con Ctrl+C
-        break
-    except Exception as e:
-        print(f"Error: {e}")
-
-# Cerrar la conexión con el puerto serial
-ser.close()
+    if predicted_label == "R":
+        pa.hotkey('alt', 'tab')
+    if predicted_label == "D":
+        pa.press('volumedown')
+    if predicted_label == "U":
+        pa.press('volumeup')
+    if predicted_label == "L":
+        pa.press('volumemute')
+    if predicted_label == "F":
+        pa.press('win')
