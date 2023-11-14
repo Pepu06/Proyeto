@@ -89,7 +89,7 @@ def receive_data():
     try:
         data = request.get_json(force=True)
         vx = int(data[0]) * 2.8
-        vy = int(data[1]) * 2.2
+        vy = int(data[1]) * 2.5
         gesto = int(data[2])
         click = int(data[4])
         presentacion = int(data[3])
