@@ -12,6 +12,11 @@ label_encoder = joblib.load('label_encoder.pkl')
 app = Flask(__name__)
 pyautogui.FAILSAFE = False
 
+
+def run():
+	#WSGIServer
+    app.run(host="0.0.0.0", port=8080)
+
 datos = []
 gyro = [0, 0]
 presentacion_switch = False
@@ -89,9 +94,9 @@ def receive_data():
     try:
         data = request.get_json(force=True)
         vx = int(data[0]) * 2.8
-        vy = int(data[1]) * 2.5
-        gesto = int(data[2])
-        click = int(data[4])
+        vy = int(data[1]) * 2.9
+        gesto = int(data[4])
+        click = int(data[2])
         presentacion = int(data[3])
         gyro = [vx, vy]
 
@@ -103,29 +108,35 @@ def receive_data():
             del datos[1]
 
         if (presentacion_switch == False) and (gesto == 1):
-            thread = threading.Thread(target=gestos_normales)
-            
-            thread.start()
+            #thread = threading.Thread(target=gestos_normales)
+            #thread.start()
+            gestos_normales()
         
         if presentacion == True:
             presentacion_switch = not presentacion_switch
             print(presentacion_switch)
         
         if (presentacion_switch == True) and (gesto == 1):
-            thread = threading.Thread(target=presentaciones)
-            
-            thread.start()
+            #thread = threading.Thread(target=presentaciones)
+            #thread.start()
+            presentaciones()
 
         if click == 1:
             pyautogui.click()
 
 
         # Mover el mouse suavizado
-        pyautogui.move(vx, vy)
+        pyautogui.move(vx, vy, duration = 0.1)
                         
         return 'Data received successfully', 200
     except Exception as e:
         return f'Error: {str(e)}', 400
     
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080)
+
+#Thread
+def serve():
+    thread = threading.Thread(target=run)
+    thread.start()
+
+if __name__ == "__main__":
+    serve()
